@@ -1,1 +1,85 @@
+/*
+   Line Follower Robot using Arduino & L298N
+   Author: Your Name
+   GitHub Repository: YourGitHubLink
+
+   Description:
+   This Arduino-based Line Follower Robot uses IR sensors to detect and follow a path. 
+   The robot consists of two DC motors controlled via an L298N motor driver. 
+   The IR sensors help identify the line by differentiating between black and white surfaces.
+   Based on sensor readings, the robot adjusts its movement to stay on the track, moving forward,
+   turning left, or turning right as needed. If both sensors detect no line, the robot stops.
+*/
+
+// Motor Driver Pins
+#define ENA 9  // Enable pin for motor A
+#define IN1 8  // Motor A input 1
+#define IN2 7  // Motor A input 2
+#define ENB 3  // Enable pin for motor B
+#define IN3 5  // Motor B input 3
+#define IN4 4  // Motor B input 4
+
+// IR Sensor Pins
+#define LEFT_SENSOR A0
+#define RIGHT_SENSOR A1
+
+void setup() {
+    pinMode(ENA, OUTPUT);
+    pinMode(ENB, OUTPUT);
+    pinMode(IN1, OUTPUT);
+    pinMode(IN2, OUTPUT);
+    pinMode(IN3, OUTPUT);
+    pinMode(IN4, OUTPUT);
+    pinMode(LEFT_SENSOR, INPUT);
+    pinMode(RIGHT_SENSOR, INPUT);
+}
+
+void loop() {
+    int leftValue = digitalRead(LEFT_SENSOR);
+    int rightValue = digitalRead(RIGHT_SENSOR);
+    
+    if (leftValue == 0 && rightValue == 0) {
+        moveForward();
+    } else if (leftValue == 1 && rightValue == 0) {
+        turnRight();
+    } else if (leftValue == 0 && rightValue == 1) {
+        turnLeft();
+    } else {
+        stopMotors();
+    }
+}
+
+void moveForward() {
+    digitalWrite(IN1, HIGH);
+    digitalWrite(IN2, LOW);
+    digitalWrite(IN3, HIGH);
+    digitalWrite(IN4, LOW);
+    analogWrite(ENA, 150); // Speed control
+    analogWrite(ENB, 150);
+}
+
+void turnRight() {
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, HIGH);
+    digitalWrite(IN3, HIGH);
+    digitalWrite(IN4, LOW);
+    analogWrite(ENA, 120);
+    analogWrite(ENB, 120);
+}
+
+void turnLeft() {
+    digitalWrite(IN1, HIGH);
+    digitalWrite(IN2, LOW);
+    digitalWrite(IN3, LOW);
+    digitalWrite(IN4, HIGH);
+    analogWrite(ENA, 120);
+    analogWrite(ENB, 120);
+}
+
+void stopMotors() {
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, LOW);
+    digitalWrite(IN3, LOW);
+    digitalWrite(IN4, LOW);
+}
 
